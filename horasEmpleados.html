@@ -1,0 +1,146 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Horas laboradas empleados</title>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css"/>
+
+        <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+        <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+
+        <div class="container" style="padding:20px;20px;">
+          <div class="">
+            <h1>Listado horas laboradas empleados</h1>
+            <div class="datatablesEmp"> </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+           Parse.initialize("88438afa-86ec-4e8a-9a52-e29b18cea22d");
+           Parse.serverURL = 'https://parse.buddy.com/parse/'; 
+
+           getData();
+
+       });
+
+        function getData(){
+
+
+            var Nomina = Parse.Object.extend("Nomina");
+            var query = new Parse.Query(Nomina);
+
+    // Retrieve the most recent ones
+    query.descending("createdAt");
+
+
+    // Include the post data with each comment
+    query.include("empleado");
+
+    query.find({
+      success: function(nomina) {    
+
+         var table ='<table id="employee_grid" class="display" width="100%" cellspacing="0">'+
+         '<thead>'+
+         '<tr>'+
+         '<th>Nombres</th>'+
+         '<th>Cédula</th>'+
+         '<th>Salario</th>'+
+         '<th>Valor hora</th>'+
+         '<th>Año</th>'+
+         '<th>Mes</th>'+
+         '<th>C</th>'+
+         '<th>CF</th>'+
+         '<th>M</th> '+
+         '<th>TD</th>'+
+         '<th>N</th>'+
+         '<th>NFS</th>'+
+         '<th>T</th>'+
+         '<th>TF</th>'+
+         '<th>CD</th>'+     
+         '<th>NS</th>'+
+         '<th>MD</th>'+
+         '<th>NDS</th>'+
+         '<th>NDF</th>'+
+         '<th>MF</th>'+
+          '<th>Total</th>'+ 
+         '</tr>'+
+         '</thead>'+
+         '+<tbody>';
+
+         for (var i = 0; i < nomina.length; i++) {
+            var  object = nomina[i];               
+            var nombre = object.get("empleado").get("nombre") + ' ' + object.get("empleado").get("apellido");     
+            var cedula = object.get("empleado").get("cedula");
+            var salario = object.get("empleado").get("salario");
+            var valorHora = object.get("empleado").get("valorHora");            
+
+
+            table +='<tr><td>'+nombre+'</td>'+               
+            ' <td>'+cedula+'</td>'+
+            '<td>'+salario+'</td>'+
+            '<td>'+valorHora+'</td>'+
+            '<td>'+object.get('anno')+'</td>'+
+            '<td>'+object.get('mes')+'</td>'+
+            ' <td>'+object.get('c')+'</td>'+
+            '<td>'+object.get('cf')+'</td>'+
+            '<td>'+object.get('m')+'</td>'+
+            '<td>'+object.get('td')+'</td>'+
+            ' <td>'+object.get('n')+'</td>'+
+            '<td>'+object.get('nfs')+'</td>'+
+            '<td>'+object.get('t')+'</td>'+
+            '<td>'+object.get('tf')+'</td>'+
+            ' <td>'+object.get('cd')+'</td>'+
+            '<td>'+object.get('ns')+'</td>'+
+            '<td>'+object.get('md')+'</td>'+
+            '<td>'+object.get('nds')+'</td>'+
+            '<td>'+object.get('ndf')+'</td>'+
+            '<td>'+object.get('mf')+'</td>'+
+             '<td> $ '+object.get('total')+'</td>'+
+            '</tr>';
+
+
+        }
+
+        table +='</tbody>'+
+        '<tfoot>'+
+        '<tr>'+
+        '<th>Nombres</th>'+
+        '<th>Cédula</th>'+
+        '<th>Salario</th>'+
+        '<th>Valor hora</th>'+
+        '<th>Año</th>'+
+        '<th>Mes</th>'+
+        '<th>C</th>'+
+        '<th>CF</th>'+
+        '<th>M</th> '+
+        '<th>TD</th>'+
+        '<th>N</th>'+
+        '<th>NFS</th>'+
+        '<th>T</th>'+
+        '<th>TF</th>'+
+        '<th>CD</th>  '+     
+        '<th>NS</th>'+
+        '<th>MD</th>'+
+        '<th>NDS</th>'+
+        '<th>NDF</th>'+
+        '<th>MF</th> '+  
+        '<th>Total</th> '+   
+
+        '</tr>'+
+        '</tfoot>'+
+        '</table>';
+        $(".datatablesEmp").html(table);
+        $('#employee_grid').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        } );
+    }
+
+
+    });
+    };
+    </script>

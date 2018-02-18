@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>Nomina - Registro empleados</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+ <link href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
+<script type="javascript">
+
+
+
+function right(e) {
+
+if (navigator.appName == 'Netscape' && 
+
+(e.which == 3 || e.which == 2))
+
+return false;
+
+else if (navigator.appName == 'Microsoft Internet Explorer' && 
+
+(event.button == 2 || event.button == 3)) {
+
+alert("Lo sentimos, el botón derecho del ratón está inhabilitado");
+
+return false;
+
+}
+
+return true;
+
+}
+
+document.onmousedown=right;
+
+if (document.layers) window.captureEvents(Event.MOUSEDOWN);
+
+window.onmousedown=right;
+
+// End -->
+
+</script>
+
+</head>
+<body >
+
+<div class="container">
+   <div class="row">
+      <div class="col-sm-12">
+        <div class="text-center">
+        <img src="https://i2.wp.com/www.nominapro.mx/wp-content/uploads/2017/01/Qu%C3%A9-es-la-Maquila-de-N%C3%B3mina.png?w=1080&ssl=1" width="250px" height="250px" id="avatar">       
+        </div>
+         
+      </div>
+    </div> 
+    <div class="form-group">
+	    <label for="exampleInputEmail1">Nombre *</label>
+	    <input type="text" class="form-control" id="nombre" aria-describedby="emailHelp" placeholder="Nombres empleado" required="">
+	    <small id="emailHelp" class="form-text text-muted">Nombres del empleado</small>
+    </div>
+     <div class="form-group">
+	    <label for="exampleInputEmail1">Apellido *</label>
+	    <input type="text" class="form-control" id="apellido" aria-describedby="emailHelp" placeholder="Apellidos" required="">
+	    <small id="emailHelp" class="form-text text-muted">Apellidos del empleado</small>
+    </div>
+    <div class="form-group">
+	    <label for="exampleInputEmail1">Cédula *</label>
+	    <input type="number" class="form-control" id="cedula" aria-describedby="emailHelp" placeholder="Cédula" required="">
+	    <small id="emailHelp" class="form-text text-muted">Cédula</small>
+    </div>
+   
+    <div class="form-group">
+      <label for="exampleInputEmail1">Salario *</label>
+      <input type="number" class="form-control" id="salario" aria-describedby="emailHelp" placeholder="Salario del empleado" required="">
+      <small id="emailHelp" class="form-text text-muted">Salario del empleado</small>
+    </div>
+    
+  
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="text-center">
+      <button onclick="save();" class="btn btn-info btn-lg">Registrar empleado</button>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+
+ <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+
+ 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+<script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+ 
+ 
+
+<script type="text/javascript">
+	 
+	Parse.initialize("88438afa-86ec-4e8a-9a52-e29b18cea22d");
+	Parse.serverURL = 'https://parse.buddy.com/parse/'; 
+           
+ 
+    
+		function save() {    
+     
+      var nombre = $("#nombre").val();
+      var apellido = $("#apellido").val();
+      var cedula = $("#cedula").val();
+      var salario = $("#salario").val();
+    
+      if(nombre.length < 1 && apellido.length < 1 &&  cedula.length < 1 &&   salario.length < 1){
+        toastr.error('Error!', 'Todos los campos son requeridos!', {timeOut: 5000})
+      }else{
+          var Empleado = Parse.Object.extend("Empleado");
+          var empleado = new Empleado();
+          var vHora = salario /240;
+          var sEmpl = parseInt(salario);
+          var vhEmpl = parseInt(vHora);
+          empleado.set("nombre", nombre);
+          empleado.set("apellido", apellido);
+          empleado.set("cedula", cedula);
+          empleado.set("salario",sEmpl );
+          empleado.set("valorHora", vhEmpl);
+          empleado.save(null, {
+            success: function(gameScore) {
+              clearInput();
+              toastr.success('Un momento por favor....', 'Guardardo registro', {timeOut: 5000})
+            },
+            error: function(gameScore, error) {              
+              toastr.error('Error!', 'Error al crear el registro:' + error.message, {timeOut: 5000})
+            }
+          });
+      
+  
+      }
+  };
+  function clearInput(){
+    $("#nombre").val('');
+    $("#apellido").val('');
+    $("#cedula").val('');
+    $("#salario").val('');
+  }
+
+         
+</script>
+</body>
+</html>
